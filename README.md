@@ -11,10 +11,10 @@ A library for array manipulations.
 
 ## Installation
 
-It's recommended that you install Assets as a project dependency via [Composer](https://getcomposer.org/):
+It's recommended that you install Arrays as a project dependency via [Composer](https://getcomposer.org/):
 
 ```bash
-composer require stellarwp/assets
+composer require stellarwp/arrays
 ```
 
 > We _actually_ recommend that this library gets included in your project using [Strauss](https://github.com/BrianHenryIE/strauss).
