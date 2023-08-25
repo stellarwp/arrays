@@ -65,9 +65,9 @@ jobs:
           ${SLIC_BIN} debug on
           ${SLIC_BIN} info
           ${SLIC_BIN} config
-      - name: Set up StellarWP Assets
+      - name: Set up StellarWP Arrays
         run: |
-          ${SLIC_BIN} use assets
+          ${SLIC_BIN} use arrays
           ${SLIC_BIN} composer install --ignore-platform-reqs
       - name: Run suite wpunit
         run: ${SLIC_BIN} run ${{ matrix.suite }} --ext DotReporter
