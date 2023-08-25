@@ -3,6 +3,7 @@ files/
 repo/
 vendor/
 tests/_support/_generated
+bin/*.phar
 
 # Dev tools
 .buildpath
