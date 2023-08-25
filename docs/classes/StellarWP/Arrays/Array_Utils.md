@@ -9,30 +9,7 @@ Array utilities
 * Full name: `\StellarWP\Arrays\Array_Utils`
 
 
-* [add_prefixed_keys_to](#add_prefixed_keys_to)
-* [add_unprefixed_keys_to](#add_unprefixed_keys_to)
-* [array_visit_recursive](#array_visit_recursive)
-* [destringify_keys](#destringify_keys)
-* [escape_multidimensional_array](#escape_multidimensional_array)
-* [filter_to_flat_scalar_associative_array](#filter_to_flat_scalar_associative_array)
-* [filter_prefixed](#filter_prefixed)
-* [flatten](#flatten)
-* [get](#get)
-* [get_first_set](#get_first_set)
-* [get_in_any](#get_in_any)
-* [list_to_array](#list_to_array)
-* [map_or_discard](#map_or_discard)
-* [merge_recursive_query_vars](#merge_recursive_query_vars)
-* [parse_associative_array_alias](#parse_associative_array_alias)
-* [recursive_ksort](#recursive_ksort)
-* [remove_numeric_keys_recursive](#remove_numeric_keys_recursive)
-* [remove_string_keys_recursive](#remove_string_keys_recursive)
-* [set](#set)
-* [shape_filter](#shape_filter)
-* [stringify_keys](#stringify_keys)
-* [strpos](#strpos)
-* [to_list](#to_list)
-* [usearch](#usearch)
+
 
 ## Methods
 
@@ -190,7 +167,7 @@ The sanitized array
 
 **See Also:**
 
-* https://gist.github.com/esthezia/5804445 -
+* https://gist.github.com/esthezia/5804445 - 
 
 ***
 
@@ -388,6 +365,62 @@ The value of the specified index or the default if not found.
 
 ***
 
+### insert_after_key
+
+Insert an array after a specified key within another array.
+
+```php
+public static insert_after_key(string|int $key, array $source_array, mixed $insert): array
+```
+
+
+
+* This method is **static**.
+
+
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$key` | **string&#124;int** | The key of the array to insert after. |
+| `$source_array` | **array** | The array to insert into. |
+| `$insert` | **mixed** | Value or array to insert. |
+
+
+
+
+***
+
+### insert_before_key
+
+Insert an array immediately before a specified key within another array.
+
+```php
+public static insert_before_key(string|int $key, array $source_array, mixed $insert): array
+```
+
+
+
+* This method is **static**.
+
+
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$key` | **string&#124;int** | The key of the array to insert before. |
+| `$source_array` | **array** | The array to insert into. |
+| `$insert` | **mixed** | Value or array to insert. |
+
+
+
+
+***
+
 ### list_to_array
 
 Converts a list to an array filtering out empty string elements.
@@ -452,6 +485,36 @@ one key only or `false` if one key was passed but the key could
 not be mapped.
 
 
+
+***
+
+### merge_recursive
+
+Recursively merge two arrays preserving keys.
+
+```php
+public merge_recursive(array& $array1, array& $array2): array
+```
+
+
+
+
+
+
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$array1` | **array** |  |
+| `$array2` | **array** |  |
+
+
+
+**See Also:**
+
+* http://php.net/manual/en/function.array-merge-recursive.php#92195 - 
 
 ***
 
@@ -729,7 +792,7 @@ Integer position of first needle occurrence.
 
 **See Also:**
 
-* \StellarWP\Arrays\strpos() -
+* \StellarWP\Arrays\strpos() - 
 
 ***
 

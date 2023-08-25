@@ -349,6 +349,56 @@ class Array_Utils {
 	}
 
 	/**
+	 * Insert an array after a specified key within another array.
+	 *
+	 * @param string|int $key The key of the array to insert after.
+	 * @param array $source_array The array to insert into.
+	 * @param mixed $insert Value or array to insert.
+	 *
+	 * @return array
+	 */
+	public static function insert_after_key( $key, array $source_array, $insert ): array {
+		if ( ! is_array( $insert ) ) {
+			$insert = [ $insert ];
+		}
+
+		if ( array_key_exists( $key, $source_array ) ) {
+			$position     = array_search( $key, array_keys( $source_array ) ) + 1;
+			$source_array = array_slice( $source_array, 0, $position, true ) + $insert + array_slice( $source_array, $position, null, true );
+		} else {
+			// If no key is found, then add it to the end of the array.
+			$source_array += $insert;
+		}
+
+		return $source_array;
+	}
+
+	/**
+	 * Insert an array immediately before a specified key within another array.
+	 *
+	 * @param string|int $key The key of the array to insert before.
+	 * @param array $source_array The array to insert into.
+	 * @param mixed $insert Value or array to insert.
+	 *
+	 * @return array
+	 */
+	public static function insert_before_key( $key, array $source_array, $insert ): array {
+		if ( ! is_array( $insert ) ) {
+			$insert = [ $insert ];
+		}
+
+		if ( array_key_exists( $key, $source_array ) ) {
+			$position     = array_search( $key, array_keys( $source_array ) );
+			$source_array = array_slice( $source_array, 0, $position, true ) + $insert + array_slice( $source_array, $position, null, true );
+		} else {
+			// If no key is found, then add it to the end of the array.
+			$source_array += $insert;
+		}
+
+		return $source_array;
+	}
+
+	/**
 	 * Converts a list to an array filtering out empty string elements.
 	 *
 	 * @param string|mixed|null $value A string representing a list of values separated by the specified separator
@@ -427,6 +477,32 @@ class Array_Utils {
 		}
 
 		return $found ? $mapped[0] : false;
+	}
+
+	/**
+	 * Recursively merge two arrays preserving keys.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @link http://php.net/manual/en/function.array-merge-recursive.php#92195
+	 *
+	 * @param array $array1
+	 * @param array $array2
+	 *
+	 * @return array
+	 */
+	function merge_recursive( array &$array1, array &$array2 ): array {
+		$merged = $array1;
+
+		foreach ( $array2 as $key => &$value ) {
+			if ( is_array( $value ) && isset( $merged [ $key ] ) && is_array( $merged [ $key ] ) ) {
+				$merged [ $key ] = static::merge_recursive( $merged [ $key ], $value );
+			} else {
+				$merged [ $key ] = $value;
+			}
+		}
+
+		return $merged;
 	}
 
 	/**
