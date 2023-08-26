@@ -625,7 +625,7 @@ class Arr {
 	 * @return bool
 	 */
 	public static function is_assoc( array $array ) {
-		return ! array_is_list( $array );
+		return ! static::is_list( $array );
 	}
 
 	/**
@@ -638,7 +638,18 @@ class Arr {
 	 * @return bool
 	 */
 	public static function is_list( $array ) {
-		return array_is_list( $array );
+		if ( function_exists( 'array_is_list' ) ) {
+			return array_is_list( $array );
+		}
+
+		$i = 0;
+		foreach ( $array as $k => $v ) {
+			if ( $k !== $i++ ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 
@@ -1201,7 +1212,7 @@ class Arr {
 			}
 		}
 
-		if ( ! array_is_list( $array ) ) {
+		if ( ! static::is_list( $array ) ) {
 			$descending
 				? krsort( $array, $options )
 				: ksort( $array, $options );
