@@ -77,3 +77,7 @@ composer require stellarwp/arrays
 ## Notes on examples
 
 Since the recommendation is to use Strauss to prefix this library's namespaces, all examples will be using the `Boomshakalaka` namespace prefix.
+
+## Acknowledgements
+
+A number of array methods were ported over from [The Events Calendar](https://theeventscalendar.com) and the [Laravel Framework](https://github.com/laravel/framework).
