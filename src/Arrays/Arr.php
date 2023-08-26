@@ -2,10 +2,41 @@
 
 namespace StellarWP\Arrays;
 
+use ArrayAccess;
+use Illuminate\Support\Enumerable;
+use InvalidArgumentException;
+
 /**
  * Array utilities
  */
-class Array_Utils {
+class Arr {
+	/**
+	 * Determines if the given value is array accessible.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return bool
+	 */
+	public static function accessible( $value ): bool {
+		return is_array( $value ) || $value instanceof ArrayAccess;
+	}
+
+	/**
+	 * Add an element to an array using "dot" notation if it doesn't exist.
+	 *
+	 * @param array            $array
+	 * @param string|int|float $key
+	 * @param mixed            $value
+	 *
+	 * @return array
+	 */
+	public static function add( $array, $key, $value ) {
+		if ( is_null( static::get( $array, $key ) ) ) {
+			static::set( $array, $key, $value );
+		}
+
+		return $array;
+	}
 
 	/**
 	 * Duplicates any key not prefixed with '_' creating a prefixed duplicate one.
@@ -104,7 +135,7 @@ class Array_Utils {
 				$value = static::array_visit_recursive( $value, $visitor );
 			}
 			// Ensure visitors can quickly return `null` to remove an element.
-			[ $updated_key, $update_value ] = array_replace( [ $key, $value ], (array) $visitor( $key, $value ) );
+			[ $updated_key, $update_value ] = array_replace( [ $key, $value ], static::wrap( $visitor( $key, $value ) ) );
 			if ( false === $updated_key ) {
 				// Visitor will be able to remove an element by returning a `false` key for it.
 				continue;
@@ -118,6 +149,28 @@ class Array_Utils {
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * Collapse an array of arrays into a single array.
+	 *
+	 * @param iterable $array
+	 *
+	 * @return array
+	 */
+	public static function collapse( $array ) {
+		$results = [];
+
+		foreach ( $array as $values ) {
+			if ( ! is_array( $values ) ) {
+				continue;
+			}
+
+			$results[] = $values;
+		}
+
+		return array_merge( [], ...$results );
 	}
 
 	/**
@@ -140,6 +193,29 @@ class Array_Utils {
 		};
 
 		return static::array_visit_recursive( $input, $visitor );
+	}
+
+
+	/**
+	 * Flatten a multi-dimensional associative array with dots.
+	 *
+	 * @param iterable $array
+	 * @param string   $prepend
+	 *
+	 * @return array
+	 */
+	public static function dot( $array, $prepend = '' ) {
+		$results = [];
+
+		foreach ( $array as $key => $value ) {
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				$results = array_merge( $results, static::dot( $value, $prepend . $key . '.' ) );
+			} else {
+				$results[ $prepend . $key ] = $value;
+			}
+		}
+
+		return $results;
 	}
 
 	/**
@@ -206,6 +282,45 @@ class Array_Utils {
 	}
 
 	/**
+	 * Get all of the given array except for a specified array of keys.
+	 *
+	 * @param array                  $array
+	 * @param array|string|int|float $keys
+	 *
+	 * @return array
+	 */
+	public static function except( $array, $keys ) {
+		static::forget( $array, $keys );
+
+		return $array;
+	}
+
+
+	/**
+	 * Determine if the given key exists in the provided array.
+	 *
+	 * @param \ArrayAccess|array $array
+	 * @param string|int         $key
+	 *
+	 * @return bool
+	 */
+	public static function exists( $array, $key ) {
+		if ( $array instanceof Enumerable ) {
+			return $array->has( $key );
+		}
+
+		if ( $array instanceof ArrayAccess ) {
+			return $array->offsetExists( $key );
+		}
+
+		if ( is_float( $key ) ) {
+			$key = (string) $key;
+		}
+
+		return array_key_exists( $key, $array );
+	}
+
+	/**
 	 * Filters an associative array non-recursively, keeping only the values attached
 	 * to keys starting with the specified prefix.
 	 *
@@ -217,7 +332,7 @@ class Array_Utils {
 	 * @return array The filtered array.
 	 */
 	public static function filter_prefixed( array $array, string $prefix ): array {
-		$prefixes = implode( '|', array_map( 'preg_quote', (array) $prefix ) );
+		$prefixes = implode( '|', array_map( 'preg_quote', static::wrap( $prefix ) ) );
 		$pattern  = '/^(' . $prefixes . ')/';
 		$filtered = [];
 		foreach ( $array as $key => $value ) {
@@ -231,39 +346,111 @@ class Array_Utils {
 	}
 
 	/**
-	 * Flattens an array transforming each value that is an array and only contains one
-	 * element into that one element.
+	 * Return the first element in an array passing a given truth test.
+	 *
+	 * @param iterable      $array
+	 * @param callable|null $callback
+	 * @param mixed         $default
+	 *
+	 * @return mixed
+	 */
+	public static function first( $array, callable $callback = null, $default = null ) {
+		if ( is_null( $callback ) ) {
+			if ( empty( $array ) ) {
+				return value( $default );
+			}
+
+			foreach ( $array as $item ) {
+				return $item;
+			}
+		}
+
+		foreach ( $array as $key => $value ) {
+			if ( $callback( $value, $key ) ) {
+				return $value;
+			}
+		}
+
+		return value( $default );
+	}
+
+	/**
+	 * Flatten a multi-dimensional array into a single level.
 	 *
 	 * Typical use case is to flatten arrays like those returned by `get_post_meta( $id )`.
 	 * Empty arrays are replaced with an empty string.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $array The array to flatten.
+	 * @param array    $array The array to flatten.
+	 * @param iterable $array
+	 * @param int      $depth
 	 *
 	 * @return array The flattened array.
 	 */
-	public static function flatten( array $array ): array {
-		foreach ( $array as $key => &$value ) {
-			if ( ! is_array( $value ) ) {
-				continue;
-			}
+	public static function flatten( array $array, $depth = INF ): array {
 
-			$count = count( $value );
+		$result = [];
 
-			switch ( $count ) {
-				case 0:
-					$value = '';
-					break;
-				case 1:
-					$value = reset( $value );
-					break;
-				default:
-					break;
+		foreach ( $array as $item ) {
+			if ( ! is_array( $item ) ) {
+				$result[] = $item;
+			} else {
+				$values = $depth === 1
+					? array_values( $item )
+					: static::flatten( $item, $depth - 1 );
+
+				foreach ( $values as $value ) {
+					$result[] = $value;
+				}
 			}
 		}
 
-		return $array;
+		return $result;
+	}
+
+	/**
+	 * Remove one or many array items from a given array using "dot" notation.
+	 *
+	 * @param array                  $array
+	 * @param array|string|int|float $keys
+	 *
+	 * @return void
+	 */
+	public static function forget( &$array, $keys ) {
+		$original = &$array;
+
+		$keys = static::wrap( $keys );
+
+		if ( count( $keys ) === 0 ) {
+			return;
+		}
+
+		foreach ( $keys as $key ) {
+			// if the exact key exists in the top-level, remove it
+			if ( static::exists( $array, $key ) ) {
+				unset( $array[ $key ] );
+
+				continue;
+			}
+
+			$parts = explode( '.', $key );
+
+			// clean up before each pass
+			$array = &$original;
+
+			while ( count( $parts ) > 1 ) {
+				$part = array_shift( $parts );
+
+				if ( isset( $array[ $part ] ) && static::accessible( $array[ $part ] ) ) {
+					$array = &$array[ $part ];
+				} else {
+					continue 2;
+				}
+			}
+
+			unset( $array[ array_shift( $parts ) ] );
+		}
 	}
 
 	/**
@@ -272,7 +459,7 @@ class Array_Utils {
 	 * Example: get( $a, [ 0, 1, 2 ] ) returns the value of $a[0][1][2] or the default.
 	 *
 	 * @param array|object|mixed $variable Array or object to search within.
-	 * @param array|string       $indexes  Specify each nested index in order.
+	 * @param array|string|int   $indexes  Specify each nested index in order.
 	 *                                     Example: array( 'lvl1', 'lvl2' );
 	 * @param mixed              $default  Default value if the search finds nothing.
 	 *
@@ -280,15 +467,21 @@ class Array_Utils {
 	 */
 	public static function get( $variable, $indexes, $default = null ) {
 		if ( is_object( $variable ) ) {
-			$variable = (array) $variable;
+			$variable = static::wrap( $variable );
 		}
 
-		if ( ! is_array( $variable ) ) {
+		if ( ! static::accessible( $variable ) ) {
 			return $default;
 		}
 
-		foreach ( (array) $indexes as $index ) {
-			if ( ! is_array( $variable ) || ! isset( $variable[ $index ] ) ) {
+		if ( is_null( $indexes ) ) {
+			return $variable;
+		}
+
+		$indexes = static::wrap( $indexes );
+
+		foreach ( $indexes as $index ) {
+			if ( ! static::exists( $variable, $index ) ) {
 				$variable = $default;
 				break;
 			}
@@ -348,12 +541,37 @@ class Array_Utils {
 		return $default;
 	}
 
+
+	/**
+	 * Check if an item or items exist in an array using "dot" notation.
+	 *
+	 * @param \ArrayAccess|array $array
+	 * @param array|string|int   $indexes The indexes to search; in order the function will look from the first to the last.
+	 *
+	 * @return bool
+	 */
+	public static function has( $array, $indexes ) {
+		if ( is_null( $indexes ) ) {
+			return false;
+		}
+
+		$indexes = static::wrap( $indexes );
+
+		foreach ( $indexes as $index ) {
+			if ( ! static::exists( $array, $index ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	/**
 	 * Insert an array after a specified key within another array.
 	 *
-	 * @param string|int $key The key of the array to insert after.
-	 * @param array $source_array The array to insert into.
-	 * @param mixed $insert Value or array to insert.
+	 * @param string|int $key          The key of the array to insert after.
+	 * @param array      $source_array The array to insert into.
+	 * @param mixed      $insert       Value or array to insert.
 	 *
 	 * @return array
 	 */
@@ -376,9 +594,9 @@ class Array_Utils {
 	/**
 	 * Insert an array immediately before a specified key within another array.
 	 *
-	 * @param string|int $key The key of the array to insert before.
-	 * @param array $source_array The array to insert into.
-	 * @param mixed $insert Value or array to insert.
+	 * @param string|int $key          The key of the array to insert before.
+	 * @param array      $source_array The array to insert into.
+	 * @param mixed      $insert       Value or array to insert.
 	 *
 	 * @return array
 	 */
@@ -396,6 +614,78 @@ class Array_Utils {
 		}
 
 		return $source_array;
+	}
+
+
+	/**
+	 * Determines if an array is associative.
+	 *
+	 * An array is "associative" if it doesn't have sequential numerical keys beginning with zero.
+	 *
+	 * @param array $array
+	 *
+	 * @return bool
+	 */
+	public static function is_assoc( array $array ) {
+		return ! array_is_list( $array );
+	}
+
+	/**
+	 * Determines if an array is a list.
+	 *
+	 * An array is a "list" if all array keys are sequential integers starting from 0 with no gaps in between.
+	 *
+	 * @param array $array
+	 *
+	 * @return bool
+	 */
+	public static function is_list( $array ) {
+		return array_is_list( $array );
+	}
+
+
+	/**
+	 * Join all items using a string. The final items can use a separate glue string.
+	 *
+	 * @param array  $array
+	 * @param string $glue
+	 * @param string $finalGlue
+	 *
+	 * @return string
+	 */
+	public static function join( $array, $glue, $finalGlue = '' ) {
+		if ( $finalGlue === '' ) {
+			return implode( $glue, $array );
+		}
+
+		if ( count( $array ) === 0 ) {
+			return '';
+		}
+
+		if ( count( $array ) === 1 ) {
+			return end( $array );
+		}
+
+		$finalItem = array_pop( $array );
+
+		return implode( $glue, $array ) . $finalGlue . $finalItem;
+	}
+
+	/**
+	 * Return the last element in an array passing a given truth test.
+	 *
+	 * @param array         $array
+	 * @param callable|null $callback
+	 * @param mixed         $default
+	 *
+	 * @return mixed
+	 */
+	public static function last( $array, callable $callback = null, $default = null ) {
+		if ( is_null( $callback ) ) {
+			return empty( $array ) ? value( $default ) : end( $array );
+		}
+
+		return static::first( array_reverse( $array, true ), $callback, $default );
 	}
 
 	/**
@@ -462,7 +752,9 @@ class Array_Utils {
 		$hash   = md5( (string) time() );
 		$mapped = [];
 
-		foreach ( (array) $keys as $key ) {
+		$keys = static::wrap( $keys );
+
+		foreach ( $keys as $key ) {
 			$meta_key = self::get( $map, $key, $hash );
 			if ( $hash === $meta_key ) {
 				continue;
@@ -482,9 +774,9 @@ class Array_Utils {
 	/**
 	 * Recursively merge two arrays preserving keys.
 	 *
-	 * @since 1.0.0
+	 * @link  http://php.net/manual/en/function.array-merge-recursive.php#92195
 	 *
-	 * @link http://php.net/manual/en/function.array-merge-recursive.php#92195
+	 * @since 1.0.0
 	 *
 	 * @param array $array1
 	 * @param array $array2
@@ -532,6 +824,18 @@ class Array_Utils {
 	}
 
 	/**
+	 * Get a subset of the items from the given array.
+	 *
+	 * @param array        $array
+	 * @param array|string $keys
+	 *
+	 * @return array
+	 */
+	public static function only( $array, $keys ) {
+		return array_intersect_key( $array, array_flip( static::wrap( $keys ) ) );
+	}
+
+	/**
 	 * Build an array from migrating aliased key values to their canonical key values, removing all alias keys.
 	 *
 	 * If the original array has values for both the alias and its canonical, keep the canonical's value and
@@ -573,6 +877,101 @@ class Array_Utils {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Push an item onto the beginning of an array.
+	 *
+	 * @param array $array
+	 * @param mixed $value
+	 * @param mixed $key
+	 *
+	 * @return array
+	 */
+	public static function prepend( $array, $value, $key = null ) {
+		if ( func_num_args() == 2 ) {
+			array_unshift( $array, $value );
+		} else {
+			$array = [ $key => $value ] + $array;
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Get a value from the array, and remove it.
+	 *
+	 * @param array      $array
+	 * @param string|int $key
+	 * @param mixed      $default
+	 *
+	 * @return mixed
+	 */
+	public static function pull( &$array, $key, $default = null ) {
+		$value = static::get( $array, $key, $default );
+
+		static::forget( $array, $key );
+
+		return $value;
+	}
+
+	/**
+	 * Convert the array into a query string.
+	 *
+	 * @param array $array
+	 *
+	 * @return string
+	 */
+	public static function query( $array ) {
+		return http_build_query( $array, '', '&', PHP_QUERY_RFC3986 );
+	}
+
+	/**
+	 * Get one or a specified number of random values from an array.
+	 *
+	 * @param array    $array
+	 * @param int|null $number
+	 * @param bool     $preserveKeys
+	 *
+	 * @return mixed
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	public static function random( $array, $number = null, $preserveKeys = false ) {
+		$requested = is_null( $number ) ? 1 : $number;
+
+		$count = count( $array );
+
+		if ( $requested > $count ) {
+			throw new InvalidArgumentException(
+				"You requested {$requested} items, but there are only {$count} items available."
+			);
+		}
+
+		if ( is_null( $number ) ) {
+			return $array[ array_rand( $array ) ];
+		}
+
+		if ( (int) $number === 0 ) {
+			return [];
+		}
+
+		$keys = array_rand( $array, $number );
+		$keys = static::wrap( $keys );
+
+		$results = [];
+
+		if ( $preserveKeys ) {
+			foreach ( $keys as $key ) {
+				$results[ $key ] = $array[ $key ];
+			}
+		} else {
+			foreach ( $keys as $key ) {
+				$results[] = $array[ $key ];
+			}
+		}
+
+		return $results;
 	}
 
 	/**
@@ -645,7 +1044,7 @@ class Array_Utils {
 	 */
 	public static function set( $array, $key, $value ): array {
 		// Convert strings and such to array.
-		$key = (array) $key;
+		$key = static::wrap( $key );
 
 		// Setup a pointer that we can point to the key specified.
 		$key_pointer = &$array;
@@ -717,6 +1116,67 @@ class Array_Utils {
 	}
 
 	/**
+	 * Shuffle the given array and return the result.
+	 *
+	 * @param array    $array
+	 * @param int|null $seed
+	 *
+	 * @return array
+	 */
+	public static function shuffle( $array, $seed = null ) {
+		if ( is_null( $seed ) ) {
+			shuffle( $array );
+		} else {
+			mt_srand( $seed );
+			shuffle( $array );
+			mt_srand();
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Recursively sort an array by keys and values.
+	 *
+	 * @param array $array
+	 * @param int   $options
+	 * @param bool  $descending
+	 *
+	 * @return array
+	 */
+	public static function sort_recursive( $array, $options = SORT_REGULAR, $descending = false ) {
+		foreach ( $array as &$value ) {
+			if ( is_array( $value ) ) {
+				$value = static::sort_recursive( $value, $options, $descending );
+			}
+		}
+
+		if ( ! array_is_list( $array ) ) {
+			$descending
+				? krsort( $array, $options )
+				: ksort( $array, $options );
+		} else {
+			$descending
+				? rsort( $array, $options )
+				: sort( $array, $options );
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Recursively sort an array by keys and values in descending order.
+	 *
+	 * @param array $array
+	 * @param int   $options
+	 *
+	 * @return array
+	 */
+	public static function sort_recursive_desc( $array, $options = SORT_REGULAR ) {
+		return static::sort_recursive( $array, $options, true );
+	}
+
+	/**
 	 * Stringifies the numeric keys of an array.
 	 *
 	 * @since 1.0.0
@@ -750,7 +1210,7 @@ class Array_Utils {
 	 * @return false|int Integer position of first needle occurrence.
 	 */
 	public static function strpos( string $haystack, $needles, int $offset = 0 ) {
-		$needles = (array) $needles;
+		$needles = static::wrap( $needles );
 
 		foreach ( $needles as $i ) {
 			$search = strpos( $haystack, $i, $offset );
@@ -786,6 +1246,23 @@ class Array_Utils {
 	}
 
 	/**
+	 * Convert a flatten "dot" notation array into an expanded array.
+	 *
+	 * @param iterable $array
+	 *
+	 * @return array
+	 */
+	public static function undot( $array ) {
+		$results = [];
+
+		foreach ( $array as $key => $value ) {
+			static::set( $results, $key, $value );
+		}
+
+		return $results;
+	}
+
+	/**
 	 * Searches an array using a callback and returns the index of the first match.
 	 *
 	 * This method fills the gap left by the non-existence of an `array_usearch` function.
@@ -807,5 +1284,45 @@ class Array_Utils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Filter the array using the given callback.
+	 *
+	 * @param array    $array
+	 * @param callable $callback
+	 *
+	 * @return array
+	 */
+	public static function where( $array, callable $callback ) {
+		return array_filter( $array, $callback, ARRAY_FILTER_USE_BOTH );
+	}
+
+	/**
+	 * Filter items where the value is not null.
+	 *
+	 * @param array $array
+	 *
+	 * @return array
+	 */
+	public static function where_not_null( $array ) {
+		return static::where( $array, static function( $value ) {
+			return ! is_null( $value );
+		} );
+	}
+
+	/**
+	 * If the given value is not an array and not null, wrap it in one.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return array
+	 */
+	public static function wrap( $value ) {
+		if ( is_null( $value ) ) {
+			return [];
+		}
+
+		return is_array( $value ) ? $value : [ $value ];
 	}
 }

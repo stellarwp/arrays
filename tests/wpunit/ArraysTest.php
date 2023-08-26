@@ -1,7 +1,6 @@
 <?php
 namespace StellarWP\Arrays;
 
-use StellarWP\Arrays\Array_Utils as Arr;
 use StellarWP\Arrays\Tests\ArraysTestCase;
 
 class ArraysTest extends ArraysTestCase {
@@ -393,7 +392,7 @@ class ArraysTest extends ArraysTestCase {
 	 * @dataProvider list_to_array_inputs
 	 */
 	public function test_list_to_array( $input, $sep, $expected ) {
-		$this->assertEquals( $expected, Array_Utils::list_to_array( $input, $sep ) );
+		$this->assertEquals( $expected, Arr::list_to_array( $input, $sep ) );
 	}
 
 	public function map_or_discard_inputs() {
@@ -419,7 +418,7 @@ class ArraysTest extends ArraysTestCase {
 	 */
 	public function test_map_or_discard( $input, $map, $expected, $expected_found ) {
 		$found = false;
-		$this->assertEquals( $expected, Array_Utils::map_or_discard( $input, $map, $found ) );
+		$this->assertEquals( $expected, Arr::map_or_discard( $input, $map, $found ) );
 		$this->assertEquals( $expected_found, $found );
 	}
 
@@ -453,7 +452,7 @@ class ArraysTest extends ArraysTestCase {
 	 * @dataProvider unprefix_keys
 	 */
 	public function test_unprefix_array_keys( $input, $expected, bool $recursive = false ) {
-		$this->assertEquals( $expected, Array_Utils::add_unprefixed_keys_to( $input, $recursive ) );
+		$this->assertEquals( $expected, Arr::add_unprefixed_keys_to( $input, $recursive ) );
 	}
 
 	public function get_first_set_data_sets() {
@@ -474,7 +473,7 @@ class ArraysTest extends ArraysTestCase {
 	 * @dataProvider get_first_set_data_sets
 	 */
 	public function test_get_first_set( $input, $indexes, $default, $expected ) {
-		$this->assertEquals( $expected, Array_Utils::get_first_set( $input, $indexes, $default ) );
+		$this->assertEquals( $expected, Arr::get_first_set( $input, $indexes, $default ) );
 	}
 
 	public function filter_to_flat_scalar_associative_array_data_sets() {
@@ -499,7 +498,7 @@ class ArraysTest extends ArraysTestCase {
 	 * @dataProvider filter_to_flat_scalar_associative_array_data_sets
 	 */
 	public function test_filter_to_flat_scalar_associative_array( $input, $expected ) {
-		$this->assertEquals( $expected, Array_Utils::filter_to_flat_scalar_associative_array( $input ) );
+		$this->assertEquals( $expected, Arr::filter_to_flat_scalar_associative_array( $input ) );
 	}
 
 	public function parse_associative_array_alias_data_sets() {
@@ -529,7 +528,7 @@ class ArraysTest extends ArraysTestCase {
 	 * @dataProvider parse_associative_array_alias_data_sets
 	 */
 	public function test_parse_associative_array_alias( $original, $alias_map, $expected ) {
-		$this->assertEquals( $expected, Array_Utils::parse_associative_array_alias( $original, $alias_map ) );
+		$this->assertEquals( $expected, Arr::parse_associative_array_alias( $original, $alias_map ) );
 	}
 
 	public function key_fitering_data_provider() {
