@@ -61,6 +61,7 @@ A library for array manipulations.
   * [where](/docs/classes/StellarWP/Arrays/Arr.md#where)
   * [where_not_null](/docs/classes/StellarWP/Arrays/Arr.md#where_not_null)
   * [wrap](/docs/classes/StellarWP/Arrays/Arr.md#wrap)
+* [Acknowledgements](#acknowledgements)
 
 ## Installation
 
