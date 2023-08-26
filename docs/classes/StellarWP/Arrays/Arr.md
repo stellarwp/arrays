@@ -344,7 +344,7 @@ public static except(array $array, array|string|int|float $keys): array
 Determine if the given key exists in the provided array.
 
 ```php
-public static exists(\ArrayAccess|array $array, string|int $key): bool
+public static exists(\ArrayAccess|array $array, string|int|float $key): bool
 ```
 
 
@@ -359,7 +359,7 @@ public static exists(\ArrayAccess|array $array, string|int $key): bool
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$array` | **\ArrayAccess&#124;array** |  |
-| `$key` | **string&#124;int** |  |
+| `$key` | **string&#124;int&#124;float** |  |
 
 
 
@@ -431,7 +431,7 @@ public static first(iterable $array, callable|null $callback = null, mixed $defa
 Flatten a multi-dimensional array into a single level.
 
 ```php
-public static flatten(iterable $array, int $depth = INF): array
+public static flatten(iterable $array, int $depth = PHP_INT_MAX): array
 ```
 
 Typical use case is to flatten arrays like those returned by `get_post_meta( $id )`.
@@ -490,7 +490,7 @@ public static forget(array& $array, array|string|int|float $keys): void
 Find a value inside of an array or object, including one nested a few levels deep.
 
 ```php
-public static get(array|object|mixed $variable, array|string|int $indexes, mixed $default = null): mixed
+public static get(array|object|mixed $variable, array|string|int|null $indexes, mixed $default = null): mixed
 ```
 
 Example: get( $a, [ 0, 1, 2 ] ) returns the value of $a[0][1][2] or the default.
@@ -505,7 +505,7 @@ Example: get( $a, [ 0, 1, 2 ] ) returns the value of $a[0][1][2] or the default.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$variable` | **array&#124;object&#124;mixed** | Array or object to search within. |
-| `$indexes` | **array&#124;string&#124;int** | Specify each nested index in order.<br />Example: array( &#039;lvl1&#039;, &#039;lvl2&#039; ); |
+| `$indexes` | **array&#124;string&#124;int&#124;null** | Specify each nested index in order.<br />Example: array( &#039;lvl1&#039;, &#039;lvl2&#039; ); |
 | `$default` | **mixed** | Default value if the search finds nothing. |
 
 
@@ -586,7 +586,7 @@ The value of the specified index or the default if not found.
 Check if an item or items exist in an array using "dot" notation.
 
 ```php
-public static has(\ArrayAccess|array $array, array|string|int $indexes): bool
+public static has(\ArrayAccess|array $array, array|string|int|null $indexes): bool
 ```
 
 
@@ -601,7 +601,7 @@ public static has(\ArrayAccess|array $array, array|string|int $indexes): bool
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$array` | **\ArrayAccess&#124;array** |  |
-| `$indexes` | **array&#124;string&#124;int** | The indexes to search; in order the function will look from the first to the last. |
+| `$indexes` | **array&#124;string&#124;int&#124;null** | The indexes to search; in order the function will look from the first to the last. |
 
 
 
@@ -1239,6 +1239,59 @@ public static shuffle(array $array, int|null $seed = null): array
 |-----------|------|-------------|
 | `$array` | **array** |  |
 | `$seed` | **int&#124;null** |  |
+
+
+
+
+***
+
+### sort_by_priority
+
+Sort based on Priority
+
+```php
+public static sort_by_priority(array $array): int
+```
+
+
+
+* This method is **static**.
+
+
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$array` | **array** | Array to sort. |
+
+
+
+
+***
+
+### sort_by_priority_comparison
+
+Sort based on Priority
+
+```php
+protected static sort_by_priority_comparison(object|array $a, object|array $b): int
+```
+
+
+
+* This method is **static**.
+
+
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$a` | **object&#124;array** | First Subject to compare |
+| `$b` | **object&#124;array** | Second subject to compare |
 
 
 

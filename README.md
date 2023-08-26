@@ -51,6 +51,7 @@ A library for array manipulations.
   * [set](/docs/classes/StellarWP/Arrays/Arr.md#set)
   * [shape_filter](/docs/classes/StellarWP/Arrays/Arr.md#shape_filter)
   * [shuffle](/docs/classes/StellarWP/Arrays/Arr.md#shuffle)
+  * [sort_by_priority](/docs/classes/StellarWP/Arrays/Arr.md#sort_by_priority)
   * [sort_recursive](/docs/classes/StellarWP/Arrays/Arr.md#sort_recursive)
   * [sort_recursive_desc](/docs/classes/StellarWP/Arrays/Arr.md#sort_recursive_desc)
   * [stringify_keys](/docs/classes/StellarWP/Arrays/Arr.md#stringify_keys)

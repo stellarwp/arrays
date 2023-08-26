@@ -1132,6 +1132,60 @@ class Arr {
 	}
 
 	/**
+	 * Sort based on Priority
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param array $array Array to sort.
+	 *
+	 * @return int
+	 */
+	public static function sort_by_priority( $array ): array {
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+
+		if ( static::is_assoc( $array ) ) {
+			uasort( $array, [ static::class, 'sort_by_priority_comparison' ] );
+		} else {
+			usort( $array, [ static::class, 'sort_by_priority_comparison' ] );
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Sort based on Priority
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param object|array $b Second subject to compare
+	 *
+	 * @param object|array $a First Subject to compare
+	 *
+	 * @return int
+	 */
+	protected static function sort_by_priority_comparison( $a, $b ): int {
+		if ( is_array( $a ) ) {
+			$a_priority = $a['priority'];
+		} else {
+			$a_priority = $a->priority;
+		}
+
+		if ( is_array( $b ) ) {
+			$b_priority = $b['priority'];
+		} else {
+			$b_priority = $b->priority;
+		}
+
+		if ( (int) $a_priority === (int) $b_priority ) {
+			return 0;
+		}
+
+		return (int) $a_priority > (int) $b_priority ? 1 : -1;
+	}
+
+	/**
 	 * Recursively sort an array by keys and values.
 	 *
 	 * @param array $array
