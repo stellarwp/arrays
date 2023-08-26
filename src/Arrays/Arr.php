@@ -300,7 +300,7 @@ class Arr {
 	 * Determine if the given key exists in the provided array.
 	 *
 	 * @param \ArrayAccess|array $array
-	 * @param string|int         $key
+	 * @param string|int|float   $key
 	 *
 	 * @return bool
 	 */
@@ -382,14 +382,12 @@ class Arr {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array    $array The array to flatten.
 	 * @param iterable $array
 	 * @param int      $depth
 	 *
 	 * @return array The flattened array.
 	 */
-	public static function flatten( array $array, $depth = INF ): array {
-
+	public static function flatten( $array, int $depth = PHP_INT_MAX ): array {
 		$result = [];
 
 		foreach ( $array as $item ) {
@@ -458,10 +456,10 @@ class Arr {
 	 *
 	 * Example: get( $a, [ 0, 1, 2 ] ) returns the value of $a[0][1][2] or the default.
 	 *
-	 * @param array|object|mixed $variable Array or object to search within.
-	 * @param array|string|int   $indexes  Specify each nested index in order.
-	 *                                     Example: array( 'lvl1', 'lvl2' );
-	 * @param mixed              $default  Default value if the search finds nothing.
+	 * @param array|object|mixed    $variable Array or object to search within.
+	 * @param array|string|int|null $indexes  Specify each nested index in order.
+	 *                                        Example: array( 'lvl1', 'lvl2' );
+	 * @param mixed                 $default  Default value if the search finds nothing.
 	 *
 	 * @return mixed The value of the specified index or the default if not found.
 	 */
@@ -545,8 +543,8 @@ class Arr {
 	/**
 	 * Check if an item or items exist in an array using "dot" notation.
 	 *
-	 * @param \ArrayAccess|array $array
-	 * @param array|string|int   $indexes The indexes to search; in order the function will look from the first to the last.
+	 * @param \ArrayAccess|array    $array
+	 * @param array|string|int|null $indexes The indexes to search; in order the function will look from the first to the last.
 	 *
 	 * @return bool
 	 */
@@ -752,9 +750,7 @@ class Arr {
 		$hash   = md5( (string) time() );
 		$mapped = [];
 
-		$keys = static::wrap( $keys );
-
-		foreach ( $keys as $key ) {
+		foreach ( (array) $keys as $key ) {
 			$meta_key = self::get( $map, $key, $hash );
 			if ( $hash === $meta_key ) {
 				continue;
