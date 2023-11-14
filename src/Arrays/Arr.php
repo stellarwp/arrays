@@ -1149,7 +1149,7 @@ class Arr {
 	 *
 	 * @param array $array Array to sort.
 	 *
-	 * @return int
+	 * @return array
 	 */
 	public static function sort_by_priority( $array ): array {
 		if ( ! is_array( $array ) ) {
