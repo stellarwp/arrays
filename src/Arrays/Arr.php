@@ -3,8 +3,10 @@
 namespace StellarWP\Arrays;
 
 use ArrayAccess;
+use BadMethodCallException;
 use Illuminate\Support\Enumerable;
 use InvalidArgumentException;
+use Throwable;
 
 /**
  * Array utilities
@@ -299,8 +301,8 @@ class Arr {
 	/**
 	 * Determine if the given key exists in the provided array.
 	 *
-	 * @param \ArrayAccess|array $array
-	 * @param string|int|float   $key
+	 * @param ArrayAccess|array $array
+	 * @param string|int|float  $key
 	 *
 	 * @return bool
 	 */
@@ -543,7 +545,7 @@ class Arr {
 	/**
 	 * Check if an item or items exist in an array using "dot" notation.
 	 *
-	 * @param \ArrayAccess|array    $array
+	 * @param ArrayAccess|array     $array
 	 * @param array|string|int|null $indexes The indexes to search; in order the function will look from the first to the last.
 	 *
 	 * @return bool
@@ -942,7 +944,7 @@ class Arr {
 	 *
 	 * @return mixed
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function random( $array, $number = null, $preserveKeys = false ) {
 		$requested = is_null( $number ) ? 1 : $number;
@@ -1385,5 +1387,55 @@ class Arr {
 		}
 
 		return is_array( $value ) ? $value : [ $value ];
+	}
+
+	/**
+	 * Checks if an array has a specific shape.
+	 *
+	 * @since TBD
+	 *
+	 * @param array                      $array The array to check.
+	 * @param array<string|int,callable> $shape The shape to check for. Each key, either a string or an integer,
+	 *                                          maps to a callable that will be used to validate the value at that key.
+	 *                                          The callable must have the signature `fn( mixed $value ) :bool`.
+	 * @param bool                       $strict Whether the array should only contain the keys specified in the shape.
+	 *
+	 * @return bool Whether the array has the specified shape.
+	 */
+	public static function has_shape( $array, array $shape, bool $strict = false ): bool {
+		if ( ! is_array( $array ) ) {
+			return false;
+		}
+
+		if (
+			$strict
+			&& (
+				array_intersect_key( $array, $shape ) !== $array
+				||
+				array_diff_key( $array, $shape ) !== []
+			)
+		) {
+			return false;
+		}
+
+		if ( count( array_intersect_key( $shape, $array ) ) < count( $shape ) ) {
+			return false;
+		}
+
+		foreach ( $shape as $key => $check ) {
+			if ( ! is_callable( $check ) ) {
+				throw new \BadMethodCallException( 'The shape array must contain only callables as values.' );
+			}
+
+			try {
+				if ( ! $check( $array[ $key ] ) ) {
+					return false;
+				}
+			} catch ( \Throwable $th ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

@@ -29,6 +29,7 @@ A library for array manipulations.
   * [get_first_set](/docs/classes/StellarWP/Arrays/Arr.md#get_first_set)
   * [get_in_any](/docs/classes/StellarWP/Arrays/Arr.md#get_in_any)
   * [has](/docs/classes/StellarWP/Arrays/Arr.md#has)
+  * [has_shape]/docs/classes/StellarWP/Arrays/Arr.md#has_shape)
   * [insert_after_key](/docs/classes/StellarWP/Arrays/Arr.md#insert_after_key)
   * [insert_before_key](/docs/classes/StellarWP/Arrays/Arr.md#insert_before_key)
   * [is_assoc](/docs/classes/StellarWP/Arrays/Arr.md#is_assoc)

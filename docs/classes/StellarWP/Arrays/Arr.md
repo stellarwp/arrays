@@ -274,7 +274,7 @@ The sanitized array
 
 **See Also:**
 
-* https://gist.github.com/esthezia/5804445 - 
+* https://gist.github.com/esthezia/5804445 -
 
 ***
 
@@ -604,7 +604,25 @@ public static has(\ArrayAccess|array $array, array|string|int|null $indexes): bo
 | `$indexes` | **array&#124;string&#124;int&#124;null** | The indexes to search; in order the function will look from the first to the last. |
 
 
+### has_shape
 
+Check if an array has a specific shape.
+
+```php
+public static has_shape(mixed $array, array $shape): bool
+```
+
+* This method is **static**.
+
+
+
+
+**Parameters:**
+
+| Parameter | Type      | Description                                                                       |
+|-----------|-----------|-----------------------------------------------------------------------------------|
+| `$array`  | **mixed** | The array to check.                                                               |
+| `$shape`  | **array** | The shape to check for. A map from keys to the callable or Closure to check them. |
 
 ***
 
@@ -865,7 +883,7 @@ public merge_recursive(array& $array1, array& $array2): array
 
 **See Also:**
 
-* http://php.net/manual/en/function.array-merge-recursive.php#92195 - 
+* http://php.net/manual/en/function.array-merge-recursive.php#92195 -
 
 ***
 
@@ -1415,7 +1433,7 @@ Integer position of first needle occurrence.
 
 **See Also:**
 
-* \StellarWP\Arrays\strpos() - 
+* \StellarWP\Arrays\strpos() -
 
 ***
 
