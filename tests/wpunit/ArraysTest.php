@@ -851,4 +851,50 @@ class ArraysTest extends ArraysTestCase {
 	public function test_has_shape( $input, $shape, $strict, $expected ): void {
 		$this->assertEquals( $expected, Arr::has_shape( $input, $shape, $strict ) );
 	}
+
+	public function test_first(): void {
+		$this->assertEquals(
+			'lorem',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'lorem', 'default')
+		);
+		$this->assertEquals(
+			'dolor',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'dolor', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'foo', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => str_starts_with($value,'p'), 'default')
+		);
+		$this->assertEquals(
+			'lorem',
+			Arr::first(['ipsum', 'lorem', 'dolor', 'loller'], fn($value) => str_starts_with($value,'l'), 'default')
+		);
+	}
+
+	public  function test_last():void{
+		$this->assertEquals(
+			'lorem',
+			Arr::last(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'lorem', 'default')
+		);
+		$this->assertEquals(
+			'dolor',
+			Arr::last(['ipsum', 'dolor', 'lorem'], fn($value) => $value === 'dolor', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::last(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'foo', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::last(['ipsum', 'lorem', 'dolor'], fn($value) => str_starts_with($value,'p'), 'default')
+		);
+		$this->assertEquals(
+			'loller',
+			Arr::last(['ipsum', 'lorem', 'dolor', 'loller'], fn($value) => str_starts_with($value,'l'), 'default')
+		);
+	}
 }

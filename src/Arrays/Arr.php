@@ -3,10 +3,8 @@
 namespace StellarWP\Arrays;
 
 use ArrayAccess;
-use BadMethodCallException;
 use Illuminate\Support\Enumerable;
 use InvalidArgumentException;
-use Throwable;
 
 /**
  * Array utilities
@@ -359,7 +357,7 @@ class Arr {
 	public static function first( $array, callable $callback = null, $default = null ) {
 		if ( is_null( $callback ) ) {
 			if ( empty( $array ) ) {
-				return value( $default );
+				return $default;
 			}
 
 			foreach ( $array as $item ) {
@@ -373,7 +371,7 @@ class Arr {
 			}
 		}
 
-		return value( $default );
+		return $default;
 	}
 
 	/**
@@ -693,7 +691,7 @@ class Arr {
 	 */
 	public static function last( $array, callable $callback = null, $default = null ) {
 		if ( is_null( $callback ) ) {
-			return empty( $array ) ? value( $default ) : end( $array );
+			return empty( $array ) ? $default : end( $array );
 		}
 
 		return static::first( array_reverse( $array, true ), $callback, $default );
