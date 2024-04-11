@@ -6,6 +6,11 @@
   "platform": {
     "php": "7.4"
   },
+  "config": {
+    "platform": {
+      "php": "7.4.33"
+    }
+  },
   "autoload": {
     "psr-4": {
       "StellarWP\\Arrays\\": "src/Arrays/"
@@ -27,6 +32,9 @@
     }
   ],
   "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.4"
+  },
   "require-dev": {
     "codeception/module-asserts": "^1.0",
     "codeception/module-cli": "^1.0",
