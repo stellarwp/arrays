@@ -766,10 +766,135 @@ class ArraysTest extends ArraysTestCase {
 		];
 	}
 
+	public function has_shape_data_provider(): array {
+		return [
+			'not an array'                                                     => [ 'foo', [], true, false ],
+			'empty array, empty shape'                                         => [ [], [], true, true ],
+			'empty array, non-empty shape, strict'                             => [
+				[],
+				[ 'foo' => 'is_string' ],
+				true,
+				false
+			],
+			'empty array, non-empty shape, non-strict'                         => [
+				[],
+				[ 'foo' => 'is_string' ],
+				false,
+				false
+			],
+			'non-empty array, function shape, missing key, strict'             => [
+				[ 'foo' => 23 ],
+				[ 'bar' => 'is_string' ],
+				true,
+				false
+			],
+			'non-empty array, function shape, missing key, non-strict'         => [
+				[ 'foo' => 23 ],
+				[ 'bar' => 'is_string' ],
+				false,
+				false
+			],
+			'non-empty array, function shape, extra key, strict'               => [
+				[ 'foo' => 23, 'bar' => 'baz' ],
+				[ 'foo' => 'is_int' ],
+				true,
+				false
+			],
+			'non-empty array, function shape, extra key, non-strict'           => [
+				[ 'foo' => 23, 'bar' => 'baz' ],
+				[ 'foo' => 'is_int' ],
+				false,
+				true
+			],
+			'non-empty array, closure shape, all key fail failure, strict'     => [
+				[ 'foo' => 23, 'bar' => 89 ],
+				[ 'foo' => fn( $foo ) => $foo === 'hello', 'bar' => fn( $bar ) => $bar === 'world' ],
+				true,
+				false
+			],
+			'non-empty array, closure shape, all key fail failure, non-strict' => [
+				[ 'foo' => 23, 'bar' => 89 ],
+				[ 'foo' => fn( $foo ) => $foo === 'hello', 'bar' => fn( $bar ) => $bar === 'world' ],
+				false,
+				false
+			],
+			'non-empty array, closure shape, all key pass, strict'             => [
+				[ 'foo' => 'hello', 'bar' => 'world' ],
+				[ 'foo' => fn( $foo ) => $foo === 'hello', 'bar' => fn( $bar ) => $bar === 'world' ],
+				true,
+				true
+			],
+			'non-empty array, closure shape, all key pass, non-strict '        => [
+				[ 'foo' => 'hello', 'bar' => 'world' ],
+				[ 'foo' => fn( $foo ) => $foo === 'hello', 'bar' => fn( $bar ) => $bar === 'world' ],
+				false,
+				true
+			],
+			'non-empty array, closure shape, some key pass, strict'            => [
+				[ 'foo' => 'hello', 'bar' => 89 ],
+				[ 'foo' => fn( $foo ) => $foo === 'hello', 'bar' => fn( $bar ) => $bar === 'world' ],
+				true,
+				false
+			],
+			'non-empty array, closure shape, some key pass, non-strict'        => [
+				[ 'foo' => 'hello', 'bar' => 89 ],
+				[ 'foo' => fn( $foo ) => $foo === 'hello', 'bar' => fn( $bar ) => $bar === 'world' ],
+				false,
+				false
+			],
+		];
+	}
+
 	/**
-	 * @dataProvider array_visit_recursive_data_provider
+	 * @dataProvider has_shape_data_provider
 	 */
-	public function test_array_visit_recursive( $input, $visitor, $expected ) {
-		$this->assertEqualSets( $expected, Arr::array_visit_recursive( $input, $visitor ) );
+	public function test_has_shape( $input, $shape, $strict, $expected ): void {
+		$this->assertEquals( $expected, Arr::has_shape( $input, $shape, $strict ) );
+	}
+
+	public function test_first(): void {
+		$this->assertEquals(
+			'lorem',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'lorem', 'default')
+		);
+		$this->assertEquals(
+			'dolor',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'dolor', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'foo', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::first(['ipsum', 'lorem', 'dolor'], fn($value) => str_starts_with($value,'p'), 'default')
+		);
+		$this->assertEquals(
+			'lorem',
+			Arr::first(['ipsum', 'lorem', 'dolor', 'loller'], fn($value) => str_starts_with($value,'l'), 'default')
+		);
+	}
+
+	public  function test_last():void{
+		$this->assertEquals(
+			'lorem',
+			Arr::last(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'lorem', 'default')
+		);
+		$this->assertEquals(
+			'dolor',
+			Arr::last(['ipsum', 'dolor', 'lorem'], fn($value) => $value === 'dolor', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::last(['ipsum', 'lorem', 'dolor'], fn($value) => $value === 'foo', 'default')
+		);
+		$this->assertEquals(
+			'default',
+			Arr::last(['ipsum', 'lorem', 'dolor'], fn($value) => str_starts_with($value,'p'), 'default')
+		);
+		$this->assertEquals(
+			'loller',
+			Arr::last(['ipsum', 'lorem', 'dolor', 'loller'], fn($value) => str_starts_with($value,'l'), 'default')
+		);
 	}
 }
