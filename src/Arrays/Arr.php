@@ -790,7 +790,7 @@ class Arr {
 	 *
 	 * @return array
 	 */
-	function merge_recursive( array &$array1, array &$array2 ): array {
+	public static function merge_recursive( array &$array1, array &$array2 ): array {
 		$merged = $array1;
 
 		foreach ( $array2 as $key => &$value ) {
@@ -1176,7 +1176,7 @@ class Arr {
 	 *
 	 * @return int
 	 */
-	protected static function sort_by_priority_comparison( $a, $b ): int {
+	public static function sort_by_priority_comparison( $a, $b ): int {
 		if ( is_array( $a ) ) {
 			$a_priority = $a['priority'];
 		} else {
