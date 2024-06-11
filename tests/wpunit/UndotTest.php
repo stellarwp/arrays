@@ -27,15 +27,15 @@ class UndotTest extends ArraysTestCase
         ];
 
         $expected = [
-        'one' => [
-        'two' => [
-        'three' => [
-        'five' => [
-        'eight' => 'fibonacci'
-        ]
-        ]
-        ]
-        ],
+			'one' => [
+				'two' => [
+					'three' => [
+						'five' => [
+							'eight' => 'fibonacci'
+						]
+					]
+				]
+			],
         ];
 
         $this->assertSame($expected, Arr::undot($dotted));
