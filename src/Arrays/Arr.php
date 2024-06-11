@@ -1317,7 +1317,7 @@ class Arr {
 		$results = [];
 
 		foreach ( $array as $key => $value ) {
-			static::set( $results, $key, $value );
+			$results = static::set( $results, explode( '.', $key ), $value );
 		}
 
 		return $results;
