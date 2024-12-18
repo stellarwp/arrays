@@ -749,7 +749,7 @@ class Arr {
 		}
 
 		if ( ! is_array( $value ) ) {
-			$value = preg_split( '/\\s*' . preg_quote( $sep ) . '\\s*/', $value );
+			$value = preg_split( '/\\s*' . preg_quote( $sep, '/' ) . '\\s*/', $value );
 		}
 
 		$filtered = [];
