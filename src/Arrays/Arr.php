@@ -434,7 +434,7 @@ class Arr {
 
 			// For nested keys, traverse the array
 			$current = &$array;
-			$lastKey = array_pop($parts);
+			$lastKey = array_pop( $parts );
 
 			foreach ( $parts as $part ) {
 				if ( ! isset( $current[ $part ] ) || ! is_array( $current[ $part ] ) ) {
@@ -443,7 +443,7 @@ class Arr {
 				$current = &$current[ $part ];
 			}
 
-			unset($current[$lastKey]);
+			unset( $current[ $lastKey ] );
 		}
 	}
 
@@ -579,7 +579,7 @@ class Arr {
 					$i
 				);
 
-				throw new \RuntimeException($error);
+				throw new \RuntimeException( $error );
 			} elseif ( ! isset( $key_pointer[ $i ] ) ) {
 				return false;
 			}
