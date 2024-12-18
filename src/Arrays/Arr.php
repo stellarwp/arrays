@@ -31,8 +31,8 @@ class Arr {
 	 * @return array
 	 */
 	public static function add( $array, $key, $value ) {
-		$key = explode('.', $key);
-		$key = static::wrap($key);
+		$key = explode( '.', $key );
+		$key = static::wrap( $key );
 		if ( is_null( static::get( $array, $key ) ) ) {
 			$array = static::set( $array, $key, $value );
 		}
