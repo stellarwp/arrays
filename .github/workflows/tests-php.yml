@@ -69,6 +69,6 @@ jobs:
       - name: Set up StellarWP Arrays
         run: |
           ${SLIC_BIN} use arrays
-          ${SLIC_BIN} composer install --ignore-platform-reqs
+          ${SLIC_BIN} composer install
       - name: Run suite wpunit
         run: ${SLIC_BIN} run ${{ matrix.suite }} --ext DotReporter
