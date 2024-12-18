@@ -379,37 +379,37 @@ class Arr {
 	 * @return array The flattened array.
 	 */
 	public static function flatten( $array, int $depth = PHP_INT_MAX ): array {
-	$result = [];
+		$result = [];
 
-	if ( $depth < 1 ) {
-		return $array;
-	}
+		if ( $depth < 1 ) {
+			return $array;
+		}
 
-	foreach ( $array as $key => $item ) {
-		if ( ! is_array( $item ) ) {
-			// Preserve string keys, use numeric keys for numeric
-			if ( is_string( $key ) ) {
-				$result[ $key ] = $item;
-			} else {
-				$result[] = $item;
-			}
-		} else {
-			$values = $depth === 1
-				? array_values( $item )
-				: static::flatten( $item, $depth - 1 );
-
-			foreach ( $values as $value_key => $value ) {
-				// Preserve string keys from nested arrays
-				if ( is_string( $value_key ) ) {
-					$result[ $value_key ] = $value;
+		foreach ( $array as $key => $item ) {
+			if ( ! is_array( $item ) ) {
+				// Preserve string keys, use numeric keys for numeric
+				if ( is_string( $key ) ) {
+					$result[ $key ] = $item;
 				} else {
-					$result[] = $value;
+					$result[] = $item;
+				}
+			} else {
+				$values = $depth === 1
+					? array_values( $item )
+					: static::flatten( $item, $depth - 1 );
+
+				foreach ( $values as $value_key => $value ) {
+					// Preserve string keys from nested arrays
+					if ( is_string( $value_key ) ) {
+						$result[ $value_key ] = $value;
+					} else {
+						$result[] = $value;
+					}
 				}
 			}
 		}
-	}
 
-	return $result;
+		return $result;
 	}
 
 	/**
