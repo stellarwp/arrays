@@ -1,21 +1,18 @@
 <?php
 
-use StellarWP\Arrays\Arr;
+namespace StellarWP\Arrays;
+
 use StellarWP\Arrays\Tests\ArraysTestCase;
 
-class UndotTest extends ArraysTestCase
-{
+final class UndotTest extends ArraysTestCase {
 
-    public function setUp()
-    {
-        // before
-        parent::setUp();
-    }
+	public function test_undot() {
+		$array = [ 'foo' => 'bar' ];
+		$this->assertTrue(Arr::has(Arr::undot($array), 'foo'));
 
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
+		$array = [ 'foo.bar' => 'baz' ];
+		$this->assertTrue(Arr::has(Arr::undot($array), 'foo.bar'));
+	}
 
     /**
      * @test
