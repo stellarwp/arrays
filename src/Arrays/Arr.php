@@ -1355,21 +1355,7 @@ class Arr {
 		$results = [];
 
 		foreach ( $array as $key => $value ) {
-			if ( ! is_string( $key ) ) {
-				$results[ $key ] = $value;
-				continue;
-			}
-
-			$parts = explode('.', $key);
-
-			$current = &$results;
-			foreach ( $parts as $part ) {
-				if ( ! isset( $current[ $part ] ) ) {
-					$current[ $part ] = [];
-				}
-				$current = &$current[ $part ];
-			}
-			$current = $value;
+			$results = static::set( $results, explode( '.', $key ), $value );
 		}
 
 		return $results;
