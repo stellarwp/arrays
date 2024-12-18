@@ -65,6 +65,7 @@ jobs:
           ${SLIC_BIN} debug on
           ${SLIC_BIN} info
           ${SLIC_BIN} config
+          ${SLIC_BIN} php-version set 7.4
       - name: Set up StellarWP Arrays
         run: |
           ${SLIC_BIN} use arrays
