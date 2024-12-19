@@ -1081,6 +1081,11 @@ class Arr {
 	 * @return array Full array with the key set to the specified value.
 	 */
 	public static function set( $array, $key, $value ): array {
+		// Convert input to array if not already
+		if ( ! is_array( $array ) ) {
+			$array = [];
+		}
+
 		// If key is a string with dots, convert to array
 		if ( is_string( $key ) ) {
 			$key = explode( '.', $key );
@@ -1098,18 +1103,8 @@ class Arr {
 
 		// Traverse through each key segment
 		foreach ( $segments as $segment ) {
-			// If we're trying to set an array key on a non-array value, throw an error
-			if ( isset( $current[ $segment ] ) && ! is_array( $current[ $segment ] ) ) {
-				throw new \RuntimeException(
-					sprintf(
-						'Cannot set key "%s" - parent segment is not an array',
-						implode( '.', $key )
-					)
-				);
-			}
-
-			// Create empty array if segment doesn't exist
-			if ( ! isset( $current[ $segment ] ) ) {
+			// If the current segment is a Closure or not an array, convert it to an array
+			if ( ! isset( $current[ $segment ] ) || ! is_array( $current[ $segment ] ) ) {
 				$current[ $segment ] = [];
 			}
 
