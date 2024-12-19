@@ -548,7 +548,7 @@ class Arr {
 	 * @return bool
 	 */
 	public static function has( $array, $indexes ) {
-		if ( is_null( $indexes ) ) {
+		if ( ! is_array( $array ) ) {
 			return false;
 		}
 
@@ -556,39 +556,30 @@ class Arr {
 			return true;
 		}
 
+		if ( is_string( $indexes ) && isset( $array[ $indexes ] ) ) {
+			return true;
+		}
+
 		if ( is_string( $indexes ) ) {
 			$indexes = explode( '.', $indexes );
 		}
 
-		// Convert strings and such to array.
-		$indexes = static::wrap( $indexes );
+		// Start with the root array
+		$current = &$array;
 
-		// Setup a pointer that we can point to the key specified.
-		$key_pointer = &$array;
+		// Get all segments except the last one
+		$segments  = array_slice( $indexes, 0, -1 );
+		$final_key = end( $indexes );
 
 		// Iterate through every key, setting the pointer one level deeper each time.
-		foreach ( $indexes as $i ) {
-
-			// Ensure current array depth can have children set.
-			if ( ! is_array( $key_pointer ) ) {
-				// $key_pointer is set but is not an array. Converting it to an array
-				// would likely lead to unexpected problems for whatever first set it.
-				$error = sprintf(
-					'Attempted to set $array[%1$s] but %2$s is already set and is not an array.',
-					implode( '][', $indexes ),
-					$i
-				);
-
-				throw new \RuntimeException( $error );
-			} elseif ( ! isset( $key_pointer[ $i ] ) ) {
+		foreach ( $segments as $segment ) {
+			if ( ! isset( $current[ $segment ] ) || ! is_array( $current[ $segment ] ) ) {
 				return false;
 			}
-
-			// Dive one level deeper into the nested array.
-			$key_pointer = &$key_pointer[ $i ];
+			$current = &$current[ $segment ];
 		}
 
-		return true;
+		return isset( $current[ $final_key ] );
 	}
 
 	/**
