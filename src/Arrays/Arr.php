@@ -1081,36 +1081,44 @@ class Arr {
 	 * @return array Full array with the key set to the specified value.
 	 */
 	public static function set( $array, $key, $value ): array {
+		// If key is a string with dots, convert to array
+		if ( is_string( $key ) ) {
+			$key = explode( '.', $key );
+		}
+
 		// Convert strings and such to array.
 		$key = static::wrap( $key );
 
-		// Setup a pointer that we can point to the key specified.
-		$key_pointer = &$array;
+		// Start with the root array
+		$current = &$array;
 
-		// Iterate through every key, setting the pointer one level deeper each time.
-		foreach ( $key as $i ) {
+		// Get all segments except the last one
+		$segments  = array_slice( $key, 0, -1 );
+		$final_key = end( $key );
 
-			// Ensure current array depth can have children set.
-			if ( ! is_array( $key_pointer ) ) {
-				// $key_pointer is set but is not an array. Converting it to an array
-				// would likely lead to unexpected problems for whatever first set it.
-				$error = sprintf(
-					'Attempted to set $array[%1$s] but %2$s is already set and is not an array.',
-					implode( '][', $key ),
-					$i
+		// Traverse through each key segment
+		foreach ( $segments as $segment ) {
+			// If we're trying to set an array key on a non-array value, throw an error
+			if ( isset( $current[ $segment ] ) && ! is_array( $current[ $segment ] ) ) {
+				throw new \RuntimeException(
+					sprintf(
+						'Cannot set key "%s" - parent segment is not an array',
+						implode( '.', $key )
+					)
 				);
-
-				throw new \InvalidArgumentException( $error );
-			} elseif ( ! isset( $key_pointer[ $i ] ) ) {
-				$key_pointer[ $i ] = [];
 			}
 
-			// Dive one level deeper into the nested array.
-			$key_pointer = &$key_pointer[ $i ];
+			// Create empty array if segment doesn't exist
+			if ( ! isset( $current[ $segment ] ) ) {
+				$current[ $segment ] = [];
+			}
+
+			// Move pointer to next level
+			$current = &$current[ $segment ];
 		}
 
-		// Set the value for the specified key
-		$key_pointer = $value;
+		// Set the final value
+		$current[ $final_key ] = $value;
 
 		return $array;
 	}
