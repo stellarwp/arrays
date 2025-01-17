@@ -14,6 +14,7 @@ composer.lock   text -diff
 /codeception.dist.yml       export-ignore
 /codeception.slic.yml       export-ignore
 /phpstan.neon.dist          export-ignore
+/README.md                  export-ignore
 /tests                      export-ignore
 /bin                        export-ignore
 /docs                       export-ignore
