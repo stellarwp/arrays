@@ -13,7 +13,7 @@ composer.lock   text -diff
 /.env.testing.slic          export-ignore
 /codeception.dist.yml       export-ignore
 /codeception.slic.yml       export-ignore
-/phpstan.neon.dist      		export-ignore
+/phpstan.neon.dist          export-ignore
 /tests                      export-ignore
 /bin                        export-ignore
 /docs                       export-ignore
