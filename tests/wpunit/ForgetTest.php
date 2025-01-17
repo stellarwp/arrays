@@ -4,14 +4,6 @@ namespace StellarWP\Arrays;
 use StellarWP\Arrays\Tests\ArraysTestCase;
 
 final class ForgetTest extends ArraysTestCase {
-	public function setUp() {
-		// before
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
 
 	public function forget_data_provider() {
 		return [
