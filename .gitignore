@@ -11,9 +11,7 @@ bin/*.phar
 .project
 .idea/
 .vscode/
-
-# Third party dependencies
-vendor/
+.phpdoc/
 
 # Tests
 codeception.yml

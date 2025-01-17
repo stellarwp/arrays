@@ -31,6 +31,7 @@ A library for array manipulations.
   * [has](/docs/classes/StellarWP/Arrays/Arr.md#has)
   * [insert_after_key](/docs/classes/StellarWP/Arrays/Arr.md#insert_after_key)
   * [insert_before_key](/docs/classes/StellarWP/Arrays/Arr.md#insert_before_key)
+  * [intersect_key_recursive](/docs/classes/StellarWP/Arrays/Arr.md#intersect_key_recursive)
   * [is_assoc](/docs/classes/StellarWP/Arrays/Arr.md#is_assoc)
   * [is_list](/docs/classes/StellarWP/Arrays/Arr.md#is_list)
   * [join](/docs/classes/StellarWP/Arrays/Arr.md#join)

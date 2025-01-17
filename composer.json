@@ -31,16 +31,7 @@
     "illuminate/collections": "^8.0"
   },
   "require-dev": {
-    "codeception/module-asserts": "^1.0",
-    "codeception/module-cli": "^1.0",
-    "codeception/module-db": "^1.0",
-    "codeception/module-filesystem": "^1.0",
-    "codeception/module-phpbrowser": "^1.0",
-    "codeception/module-rest": "^1.0",
-    "codeception/module-webdriver": "^1.0",
-    "codeception/util-universalframework": "^1.0",
-    "lucatume/wp-browser": "^3.0.14",
-    "phpunit/phpunit": "~6.0",
+    "lucatume/wp-browser": "^3.5 || ^4.0",
     "szepeviktor/phpstan-wordpress": "^1.1",
     "symfony/event-dispatcher-contracts": "^2.5.1",
     "symfony/string": "^5.4",
@@ -48,7 +39,7 @@
   },
   "scripts": {
     "create-docs": [
-      "test -f ./bin/phpDocumentor.phar || curl -o bin/phpDocumentor.phar -L -C - https://phpdoc.org/phpDocumentor.phar",
+      "test -f ./bin/phpDocumentor.phar || curl -o bin/phpDocumentor.phar -L -C - https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.3.1/phpDocumentor.phar",
       "@php bin/phpDocumentor.phar --directory=src --target=docs --template='vendor/saggre/phpdocumentor-markdown/themes/markdown'"
     ],
     "test:analysis": [

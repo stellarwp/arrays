@@ -2,12 +2,15 @@
 
 namespace StellarWP\Arrays\Tests;
 
-class ArraysTestCase extends \Codeception\TestCase\WPTestCase {
-	protected $backupGlobals = false;
+use Codeception\Test\Unit;
+use lucatume\WPBrowser\TestCase\WPTestCase;
 
-	public function setUp() {
-		// before
-		parent::setUp();
-	}
+/**
+ * @mixin Unit
+ * @mixin \PHPUnit\Framework\TestCase
+ * @mixin \Codeception\PHPUnit\TestCase
+ */
+class ArraysTestCase extends WPTestCase {
+	protected $backupGlobals = false;
 }
 

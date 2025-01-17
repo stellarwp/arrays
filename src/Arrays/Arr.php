@@ -1418,4 +1418,24 @@ class Arr {
 
 		return is_array( $value ) ? $value : [ $value ];
 	}
+
+	/**
+	 * Recursively computes the intersection of arrays using keys for comparison.
+	 *
+	 * @param mixed[] $array1 The array with master keys to check.
+	 * @param mixed[] $array2 An array to compare keys against.
+	 *
+	 * @return mixed[] An associative array containing all the entries of array1 which have keys that are present in all arguments.
+	 */
+	public static function intersect_key_recursive( array $array1, array $array2 ): array {
+		$array1 = array_intersect_key( $array1, $array2 );
+
+		foreach ( $array1 as $key => $value ) {
+			if ( is_array( $value ) && is_array( $array2[ $key ] ) ) {
+				$array1[ $key ] = static::intersect_key_recursive( $value, $array2[ $key ] );
+			}
+		}
+
+		return $array1;
+	}
 }
