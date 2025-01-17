@@ -1661,7 +1661,7 @@ public static wrap(mixed $value): array
 Recursively computes the intersection of arrays using keys for comparison.
 
 ```php
-public static intersect_key_recursive(array $array1, array $array2): array
+public static intersect_key_recursive(array $array, array $arrays): array
 ```
 
 
@@ -1675,13 +1675,14 @@ public static intersect_key_recursive(array $array1, array $array2): array
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$array1` | **array** | The array with master keys to check. |
-| `$array2` | **array** | An array to compare keys against. |
+| `$array` | **array** | The array with master keys to check. |
+| `$arrays` | **array** | Additional arrays to compare keys against. |
 
 
 **Return Value:**
 
-An associative array containing all the entries of array1 which have keys that are present in all arguments.
+An associative array containing all the entries of $array
+whose keys exist in every provided array, recursively.
 
 
 

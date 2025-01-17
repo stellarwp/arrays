@@ -1422,20 +1422,37 @@ class Arr {
 	/**
 	 * Recursively computes the intersection of arrays using keys for comparison.
 	 *
-	 * @param mixed[] $array1 The array with master keys to check.
-	 * @param mixed[] $array2 An array to compare keys against.
+	 * @param mixed[] $array     The array with master keys to check.
+	 * @param mixed[] ...$arrays Additional arrays to compare keys against.
 	 *
-	 * @return mixed[] An associative array containing all the entries of array1 which have keys that are present in all arguments.
+	 * @return mixed[] An associative array containing all the entries of $array
+	 *                 whose keys exist in every provided array, recursively.
 	 */
-	public static function intersect_key_recursive( array $array1, array $array2 ): array {
-		$array1 = array_intersect_key( $array1, $array2 );
+	public static function intersect_key_recursive( array $array, array ...$arrays ): array {
+		$array = array_intersect_key( $array, ...$arrays );
 
-		foreach ( $array1 as $key => $value ) {
-			if ( is_array( $value ) && is_array( $array2[ $key ] ) ) {
-				$array1[ $key ] = static::intersect_key_recursive( $value, $array2[ $key ] );
+		foreach ( $array as $key => $value ) {
+			if ( ! is_array( $value ) ) {
+				continue;
 			}
+
+			$arrays_to_intersect = [];
+			foreach ( $arrays as $intersect_array ) {
+				if ( ! isset( $intersect_array[ $key ] ) || ! is_array( $intersect_array[ $key ] ) ) {
+					unset( $array[ $key ] );
+					continue 2;
+				}
+
+				$arrays_to_intersect[] = $intersect_array[ $key ];
+			}
+
+			if ( empty( $arrays_to_intersect ) ) {
+				continue;
+			}
+
+			$array[ $key ] = static::intersect_key_recursive( $value, ...$arrays_to_intersect );
 		}
 
-		return $array1;
+		return $array;
 	}
 }

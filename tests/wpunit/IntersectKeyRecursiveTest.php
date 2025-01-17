@@ -198,23 +198,57 @@ final class IntersectKeyRecursiveTest extends ArraysTestCase {
 			'a' => 1,
 			'b' => 2,
 			'c' => 3,
+			'd' => [
+				'x' => 1,
+				'y' => [
+					'a' => 1,
+					'b' => 2,
+				],
+				'z' => [
+					'a' => 1,
+					'b' => 2,
+				],
+			],
 		];
 
 		$array2 = [
 			'a' => 10,
 			'b' => 20,
+			'd' => [
+				'y' => [
+					'a' => 1,
+					'b' => 2,
+				],
+				'z' => 2,
+			],
 		];
 
 		$array3 = [
 			'a' => 100,
 			'c' => 300,
+			'd' => [
+				'x' => 1,
+				'y' => [
+					'a' => 1,
+					'b' => 2,
+				],
+				'z' => [
+					'a' => 1,
+					'b' => 2,
+				],
+			],
 		];
 
-		$result1 = Arr::intersect_key_recursive( $array1, $array2 );
-		$result2 = Arr::intersect_key_recursive( $result1, $array3 );
+		$result = Arr::intersect_key_recursive( $array1, $array2, $array3 );
 
 		$this->assertEquals( [
 			'a' => 1,
-		], $result2 );
+			'd' => [
+				'y' => [
+					'a' => 1,
+					'b' => 2,
+				],
+			],
+		], $result );
 	}
 }
