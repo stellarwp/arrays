@@ -11,6 +11,7 @@ bin/*.phar
 .project
 .idea/
 .vscode/
+.phpdoc/
 
 # Tests
 codeception.yml
