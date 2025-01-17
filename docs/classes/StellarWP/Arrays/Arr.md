@@ -38,6 +38,7 @@ public static accessible(mixed $value): bool
 
 
 
+
 ***
 
 ### add
@@ -62,6 +63,7 @@ public static add(array $array, string|int|float $key, mixed $value): array
 | `$array` | **array** |  |
 | `$key` | **string&#124;int&#124;float** |  |
 | `$value` | **mixed** |  |
+
 
 
 
@@ -98,6 +100,7 @@ original input if not an array.
 
 
 
+
 ***
 
 ### add_unprefixed_keys_to
@@ -130,6 +133,7 @@ original input if not an array.
 
 
 
+
 ***
 
 ### array_visit_recursive
@@ -158,6 +162,7 @@ public static array_visit_recursive(array|mixed $input, callable $visitor): mixe
 
 
 
+
 ***
 
 ### collapse
@@ -180,6 +185,7 @@ public static collapse(iterable $array): array
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$array` | **iterable** |  |
+
 
 
 
@@ -216,6 +222,7 @@ The input array, its stringified keys destringified.
 
 
 
+
 ***
 
 ### dot
@@ -239,6 +246,7 @@ public static dot(iterable $array, string $prepend = &#039;&#039;): array
 |-----------|------|-------------|
 | `$array` | **iterable** |  |
 | `$prepend` | **string** |  |
+
 
 
 
@@ -270,6 +278,8 @@ public static escape_multidimensional_array(array|mixed $data = []): array
 **Return Value:**
 
 The sanitized array
+
+
 
 
 **See Also:**
@@ -306,6 +316,8 @@ public static filter_to_flat_scalar_associative_array(array|mixed $array): array
 Associative or empty array.
 
 
+
+
 **See Also:**
 
 * https://www.php.net/manual/language.types.array.php - Keys cast to non-strings will be discarded.
@@ -337,6 +349,7 @@ public static except(array $array, array|string|int|float $keys): array
 
 
 
+
 ***
 
 ### exists
@@ -344,7 +357,7 @@ public static except(array $array, array|string|int|float $keys): array
 Determine if the given key exists in the provided array.
 
 ```php
-public static exists(\ArrayAccess|array $array, string|int|float $key): bool
+public static exists(\ArrayAccess|\Illuminate\Support\Enumerable|array $array, string|int|float $key): bool
 ```
 
 
@@ -358,8 +371,9 @@ public static exists(\ArrayAccess|array $array, string|int|float $key): bool
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$array` | **\ArrayAccess&#124;array** |  |
+| `$array` | **\ArrayAccess&#124;\Illuminate\Support\Enumerable&#124;array** |  |
 | `$key` | **string&#124;int&#124;float** |  |
+
 
 
 
@@ -396,6 +410,7 @@ The filtered array.
 
 
 
+
 ***
 
 ### first
@@ -420,6 +435,7 @@ public static first(iterable $array, callable|null $callback = null, mixed $defa
 | `$array` | **iterable** |  |
 | `$callback` | **callable&#124;null** |  |
 | `$default` | **mixed** |  |
+
 
 
 
@@ -456,6 +472,7 @@ The flattened array.
 
 
 
+
 ***
 
 ### forget
@@ -483,6 +500,7 @@ public static forget(array& $array, array|string|int|float $keys): void
 
 
 
+
 ***
 
 ### get
@@ -505,13 +523,20 @@ Example: get( $a, [ 0, 1, 2 ] ) returns the value of $a[0][1][2] or the default.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$variable` | **array&#124;object&#124;mixed** | Array or object to search within. |
-| `$indexes` | **array&#124;string&#124;int&#124;null** | Specify each nested index in order.<br />Example: array( &#039;lvl1&#039;, &#039;lvl2&#039; ); |
+| `$indexes` | **array&#124;string&#124;int&#124;null** | Specify each nested index in order. Can also be in dot notation.<br />Example: array( &#039;lvl1&#039;, &#039;lvl2&#039; ) or &#039;lvl1.lvl2&#039;. |
 | `$default` | **mixed** | Default value if the search finds nothing. |
 
 
 **Return Value:**
 
 The value of the specified index or the default if not found.
+
+
+
+**Throws:**
+<p>If the provided variable is not an array and does not implement ArrayAccess.</p>
+
+- [`InvalidArgumentException`](../../InvalidArgumentException.md)
 
 
 
@@ -547,6 +572,7 @@ The set value or the default value.
 
 
 
+
 ***
 
 ### get_in_any
@@ -579,6 +605,7 @@ The value of the specified index or the default if not found.
 
 
 
+
 ***
 
 ### has
@@ -602,6 +629,7 @@ public static has(\ArrayAccess|array $array, array|string|int|null $indexes): bo
 |-----------|------|-------------|
 | `$array` | **\ArrayAccess&#124;array** |  |
 | `$indexes` | **array&#124;string&#124;int&#124;null** | The indexes to search; in order the function will look from the first to the last. |
+
 
 
 
@@ -634,6 +662,7 @@ public static insert_after_key(string|int $key, array $source_array, mixed $inse
 
 
 
+
 ***
 
 ### insert_before_key
@@ -658,6 +687,7 @@ public static insert_before_key(string|int $key, array $source_array, mixed $ins
 | `$key` | **string&#124;int** | The key of the array to insert before. |
 | `$source_array` | **array** | The array to insert into. |
 | `$insert` | **mixed** | Value or array to insert. |
+
 
 
 
@@ -688,6 +718,7 @@ An array is "associative" if it doesn't have sequential numerical keys beginning
 
 
 
+
 ***
 
 ### is_list
@@ -710,6 +741,7 @@ An array is a "list" if all array keys are sequential integers starting from 0 w
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$array` | **array** |  |
+
 
 
 
@@ -742,6 +774,7 @@ public static join(array $array, string $glue, string $finalGlue = &#039;&#039;)
 
 
 
+
 ***
 
 ### last
@@ -766,6 +799,7 @@ public static last(array $array, callable|null $callback = null, mixed $default 
 | `$array` | **array** |  |
 | `$callback` | **callable&#124;null** |  |
 | `$default` | **mixed** |  |
+
 
 
 
@@ -798,6 +832,7 @@ public static list_to_array(string|mixed|null $value, string|mixed $sep = &#039;
 **Return Value:**
 
 An array of list elements.
+
 
 
 
@@ -837,6 +872,7 @@ not be mapped.
 
 
 
+
 ***
 
 ### merge_recursive
@@ -844,12 +880,12 @@ not be mapped.
 Recursively merge two arrays preserving keys.
 
 ```php
-public merge_recursive(array& $array1, array& $array2): array
+public static merge_recursive(array& $array1, array& $array2): array
 ```
 
 
 
-
+* This method is **static**.
 
 
 
@@ -860,6 +896,8 @@ public merge_recursive(array& $array1, array& $array2): array
 |-----------|------|-------------|
 | `$array1` | **array** |  |
 | `$array2` | **array** |  |
+
+
 
 
 
@@ -898,6 +936,7 @@ The recursively merged array.
 
 
 
+
 ***
 
 ### only
@@ -921,6 +960,7 @@ public static only(array $array, array|string $keys): array
 |-----------|------|-------------|
 | `$array` | **array** |  |
 | `$keys` | **array&#124;string** |  |
+
 
 
 
@@ -953,6 +993,7 @@ discard the alias' value.
 
 
 
+
 ***
 
 ### prepend
@@ -977,6 +1018,7 @@ public static prepend(array $array, mixed $value, mixed $key = null): array
 | `$array` | **array** |  |
 | `$value` | **mixed** |  |
 | `$key` | **mixed** |  |
+
 
 
 
@@ -1009,6 +1051,7 @@ public static pull(array& $array, string|int $key, mixed $default = null): mixed
 
 
 
+
 ***
 
 ### query
@@ -1031,6 +1074,7 @@ public static query(array $array): string
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$array` | **array** |  |
+
 
 
 
@@ -1060,6 +1104,12 @@ public static random(array $array, int|null $number = null, bool $preserveKeys =
 | `$number` | **int&#124;null** |  |
 | `$preserveKeys` | **bool** |  |
 
+
+
+
+**Throws:**
+
+- [`InvalidArgumentException`](../../InvalidArgumentException.md)
 
 
 
@@ -1093,11 +1143,12 @@ The sorting result.
 
 
 
+
 ***
 
 ### remove_numeric_keys_recursive
 
-Recursively remove associative, non numeric, keys from an array.
+Recursively remove numeric keys from an array.
 
 ```php
 public static remove_numeric_keys_recursive(array&lt;string|int,mixed&gt; $input): (int|mixed)[]
@@ -1120,6 +1171,7 @@ public static remove_numeric_keys_recursive(array&lt;string|int,mixed&gt; $input
 **Return Value:**
 
 An array that only contains integer keys at any of its levels.
+
 
 
 
@@ -1150,6 +1202,7 @@ public static remove_string_keys_recursive(array&lt;string|int,mixed&gt; $input)
 **Return Value:**
 
 An array that only contains non numeric keys at any of its levels.
+
 
 
 
@@ -1185,6 +1238,7 @@ Full array with the key set to the specified value.
 
 
 
+
 ***
 
 ### shape_filter
@@ -1216,6 +1270,7 @@ The input array shaped and ordered per the shape.
 
 
 
+
 ***
 
 ### shuffle
@@ -1243,6 +1298,7 @@ public static shuffle(array $array, int|null $seed = null): array
 
 
 
+
 ***
 
 ### sort_by_priority
@@ -1250,7 +1306,7 @@ public static shuffle(array $array, int|null $seed = null): array
 Sort based on Priority
 
 ```php
-public static sort_by_priority(array $array): int
+public static sort_by_priority(array $array): array
 ```
 
 
@@ -1269,6 +1325,7 @@ public static sort_by_priority(array $array): int
 
 
 
+
 ***
 
 ### sort_by_priority_comparison
@@ -1276,7 +1333,7 @@ public static sort_by_priority(array $array): int
 Sort based on Priority
 
 ```php
-protected static sort_by_priority_comparison(object|array $a, object|array $b): int
+public static sort_by_priority_comparison(object|array $a, object|array $b): int
 ```
 
 
@@ -1292,6 +1349,7 @@ protected static sort_by_priority_comparison(object|array $a, object|array $b): 
 |-----------|------|-------------|
 | `$a` | **object&#124;array** | First Subject to compare |
 | `$b` | **object&#124;array** | Second subject to compare |
+
 
 
 
@@ -1324,6 +1382,7 @@ public static sort_recursive(array $array, int $options = SORT_REGULAR, bool $de
 
 
 
+
 ***
 
 ### sort_recursive_desc
@@ -1347,6 +1406,7 @@ public static sort_recursive_desc(array $array, int $options = SORT_REGULAR): ar
 |-----------|------|-------------|
 | `$array` | **array** |  |
 | `$options` | **int** |  |
+
 
 
 
@@ -1382,6 +1442,7 @@ The input array with each numeric key stringified.
 
 
 
+
 ***
 
 ### strpos
@@ -1411,6 +1472,8 @@ public static strpos(string $haystack, array|string $needles, int $offset): fals
 **Return Value:**
 
 Integer position of first needle occurrence.
+
+
 
 
 **See Also:**
@@ -1448,6 +1511,7 @@ The list separated by the specified separator or the original list if the list i
 
 
 
+
 ***
 
 ### undot
@@ -1470,6 +1534,7 @@ public static undot(iterable $array): array
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `$array` | **iterable** |  |
+
 
 
 
@@ -1506,6 +1571,7 @@ Either the index of the first match or `false` if no match was found.
 
 
 
+
 ***
 
 ### where
@@ -1529,6 +1595,7 @@ public static where(array $array, callable $callback): array
 |-----------|------|-------------|
 | `$array` | **array** |  |
 | `$callback` | **callable** |  |
+
 
 
 
@@ -1559,6 +1626,7 @@ public static where_not_null(array $array): array
 
 
 
+
 ***
 
 ### wrap
@@ -1585,8 +1653,41 @@ public static wrap(mixed $value): array
 
 
 
+
+***
+
+### intersect_key_recursive
+
+Recursively computes the intersection of arrays using keys for comparison.
+
+```php
+public static intersect_key_recursive(array $array1, array $array2): array
+```
+
+
+
+* This method is **static**.
+
+
+
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `$array1` | **array** | The array with master keys to check. |
+| `$array2` | **array** | An array to compare keys against. |
+
+
+**Return Value:**
+
+An associative array containing all the entries of array1 which have keys that are present in all arguments.
+
+
+
+
 ***
 
 
 ***
-> Automatically generated from source code comments on 2023-08-26 using [phpDocumentor](http://www.phpdoc.org/) and [saggre/phpdocumentor-markdown](https://github.com/Saggre/phpDocumentor-markdown)
+> Automatically generated on 2025-01-17
