@@ -1438,9 +1438,13 @@ class Arr {
 
 			$arrays_to_intersect = [];
 			foreach ( $arrays as $intersect_array ) {
-				if ( ! isset( $intersect_array[ $key ] ) || ! is_array( $intersect_array[ $key ] ) ) {
+				if ( ! isset( $intersect_array[ $key ] ) ) {
 					unset( $array[ $key ] );
 					continue 2;
+				}
+
+				if ( ! is_array( $intersect_array[ $key ] ) ) {
+					continue;
 				}
 
 				$arrays_to_intersect[] = $intersect_array[ $key ];

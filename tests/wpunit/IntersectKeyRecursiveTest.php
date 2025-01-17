@@ -248,6 +248,10 @@ final class IntersectKeyRecursiveTest extends ArraysTestCase {
 					'a' => 1,
 					'b' => 2,
 				],
+				'z' => [
+					'a' => 1,
+					'b' => 2,
+				],
 			],
 		], $result );
 	}
