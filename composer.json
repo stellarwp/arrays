@@ -39,7 +39,7 @@
   },
   "scripts": {
     "create-docs": [
-      "test -f ./bin/phpDocumentor.phar || curl -o bin/phpDocumentor.phar -L -C - https://phpdoc.org/phpDocumentor.phar",
+      "test -f ./bin/phpDocumentor.phar || curl -o bin/phpDocumentor.phar -L -C - https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.3.1/phpDocumentor.phar",
       "@php bin/phpDocumentor.phar --directory=src --target=docs --template='vendor/saggre/phpdocumentor-markdown/themes/markdown'"
     ],
     "test:analysis": [
