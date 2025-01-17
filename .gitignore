@@ -12,9 +12,6 @@ bin/*.phar
 .idea/
 .vscode/
 
-# Third party dependencies
-vendor/
-
 # Tests
 codeception.yml
 tests/_output/*
