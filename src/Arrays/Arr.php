@@ -3,7 +3,6 @@
 namespace StellarWP\Arrays;
 
 use ArrayAccess;
-use Illuminate\Support\Enumerable;
 use InvalidArgumentException;
 
 /**
@@ -302,7 +301,7 @@ class Arr {
 	/**
 	 * Determine if the given key exists in the provided array.
 	 *
-	 * @param \ArrayAccess|Enumerable|array $array
+	 * @param \ArrayAccess|array $array
 	 * @param string|int|float   $key
 	 *
 	 * @return bool
