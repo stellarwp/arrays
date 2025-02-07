@@ -357,7 +357,7 @@ public static except(array $array, array|string|int|float $keys): array
 Determine if the given key exists in the provided array.
 
 ```php
-public static exists(\ArrayAccess|\Illuminate\Support\Enumerable|array $array, string|int|float $key): bool
+public static exists(\ArrayAccess|array $array, string|int|float $key): bool
 ```
 
 
@@ -371,7 +371,7 @@ public static exists(\ArrayAccess|\Illuminate\Support\Enumerable|array $array, s
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `$array` | **\ArrayAccess&#124;\Illuminate\Support\Enumerable&#124;array** |  |
+| `$array` | **\ArrayAccess&#124;array** |  |
 | `$key` | **string&#124;int&#124;float** |  |
 
 
@@ -1691,4 +1691,4 @@ whose keys exist in every provided array, recursively.
 
 
 ***
-> Automatically generated on 2025-01-17
+> Automatically generated on 2025-02-07

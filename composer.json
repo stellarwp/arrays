@@ -27,9 +27,6 @@
     }
   ],
   "minimum-stability": "stable",
-  "require": {
-    "illuminate/collections": "^8.0"
-  },
   "require-dev": {
     "lucatume/wp-browser": "^3.5 || ^4.0",
     "szepeviktor/phpstan-wordpress": "^1.1",

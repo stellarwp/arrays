@@ -3,7 +3,7 @@
 namespace StellarWP\Arrays;
 
 use ArrayAccess;
-use Illuminate\Support\Enumerable;
+use Closure;
 use InvalidArgumentException;
 
 /**
@@ -302,7 +302,7 @@ class Arr {
 	/**
 	 * Determine if the given key exists in the provided array.
 	 *
-	 * @param \ArrayAccess|Enumerable|array $array
+	 * @param \ArrayAccess|array $array
 	 * @param string|int|float   $key
 	 *
 	 * @return bool
@@ -348,7 +348,7 @@ class Arr {
 	public static function first( $array, callable $callback = null, $default = null ) {
 		if ( is_null( $callback ) ) {
 			if ( empty( $array ) ) {
-				return value( $default );
+				return self::value( $default );
 			}
 
 			foreach ( $array as $item ) {
@@ -362,7 +362,7 @@ class Arr {
 			}
 		}
 
-		return value( $default );
+		return self::value( $default );
 	}
 
 	/**
@@ -709,7 +709,7 @@ class Arr {
 	 */
 	public static function last( $array, callable $callback = null, $default = null ) {
 		if ( is_null( $callback ) ) {
-			return empty( $array ) ? value( $default ) : end( $array );
+			return empty( $array ) ? self::value( $default ) : end( $array );
 		}
 
 		return static::first( array_reverse( $array, true ), $callback, $default );
@@ -1458,5 +1458,19 @@ class Arr {
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Return the default value of the given value.
+	 *
+	 * @template TValue
+	 * @template TArgs
+	 *
+	 * @param  TValue|\Closure(TArgs): TValue  $value
+	 * @param  TArgs  ...$args
+	 * @return TValue
+	 */
+	private static function value( $value, ...$args ) {
+		return $value instanceof Closure ? $value( ...$args ) : $value;
 	}
 }
