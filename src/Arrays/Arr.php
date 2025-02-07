@@ -3,6 +3,7 @@
 namespace StellarWP\Arrays;
 
 use ArrayAccess;
+use Closure;
 use InvalidArgumentException;
 
 /**
@@ -1457,5 +1458,19 @@ class Arr {
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Return the default value of the given value.
+	 *
+	 * @template TValue
+	 * @template TArgs
+	 *
+	 * @param  TValue|\Closure(TArgs): TValue  $value
+	 * @param  TArgs  ...$args
+	 * @return TValue
+	 */
+	private static function value( $value, ...$args ) {
+		return $value instanceof Closure ? $value( ...$args ) : $value;
 	}
 }
